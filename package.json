@@ -1,0 +1,27 @@
+{
+  "name": "api_nodejs_solid",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "start": "node build/server.js",
+    "build": "tsup src --out-dir build",
+    "lint": "eslint src --ext .ts --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "16.0.3",
+    "fastify": "^4.17.0",
+    "zod": "3.21.4"
+  },
+  "devDependencies": {
+    "@rocketseat/eslint-config": "1.2.0",
+    "@types/node": "^18.16.2",
+    "tsup": "^6.7.0",
+    "tsx": "^3.12.6",
+    "typescript": "^5.0.4"
+  }
+}
