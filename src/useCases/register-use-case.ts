@@ -17,7 +17,11 @@ interface IRegisterUseCaseResponse {
 export class RegisterUserCase {
 	constructor(private userRepository: IUserRepository) {}
 
-	async execute({ name, email, password }: IRegisterUseCaseRequest): Promise<IRegisterUseCaseResponse> {
+	async execute({
+		name,
+		email,
+		password,
+	}: IRegisterUseCaseRequest): Promise<IRegisterUseCaseResponse> {
 		const userAlreadyExists = await this.userRepository.findByEmail(email);
 
 		if (userAlreadyExists) {
@@ -26,7 +30,11 @@ export class RegisterUserCase {
 
 		const passwordHash = await hash(password, 6);
 
-		const user = await this.userRepository.create({ name, email, password_hash: passwordHash });
+		const user = await this.userRepository.create({
+			name,
+			email,
+			password_hash: passwordHash,
+		});
 
 		return {
 			user,

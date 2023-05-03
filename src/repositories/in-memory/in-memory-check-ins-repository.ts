@@ -20,6 +20,30 @@ export class InMemoryCheckInsRepository implements ICheckInsRepository {
 		return checkIn;
 	}
 
+	async save(checkIn: CheckIn) {
+		const checkInIndex = this.checkIns.findIndex((checkin) => checkin.id === checkIn.id);
+
+		if (checkInIndex >= 0) {
+			this.checkIns[checkInIndex] = checkIn;
+		}
+
+		return checkIn;
+	}
+
+	async countByUserId(userId: string) {
+		return this.checkIns.filter((checkIn) => checkIn.user_id === userId).length;
+	}
+
+	async findById(id: string) {
+		const checkIn = this.checkIns.find((checkin) => checkin.id === id);
+
+		if (!checkIn) {
+			return null;
+		}
+
+		return checkIn;
+	}
+
 	async findByUserIdOnDate(userId: string, date: Date) {
 		const startOfTheDay = dayjs(date).startOf('date');
 		const endOfTheDay = dayjs(date).endOf('date');
@@ -39,7 +63,9 @@ export class InMemoryCheckInsRepository implements ICheckInsRepository {
 		return checkInOnSameDate;
 	}
 
-	async findManyByUseId(userId: string): Promise<CheckIn[]> {
-		return this.checkIns.filter((checkIn) => checkIn.user_id === userId);
+	async findManyByUseId(userId: string, page: number): Promise<CheckIn[]> {
+		return this.checkIns
+			.filter((checkIn) => checkIn.user_id === userId)
+			.slice((page - 1) * 20, page * 20);
 	}
 }
