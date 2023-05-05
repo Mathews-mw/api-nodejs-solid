@@ -11,9 +11,7 @@ interface IGetUserMetricsUseCaseResponse {
 export class GetUserMetricsUseCase {
 	constructor(private checkInsRepository: ICheckInsRepository) {}
 
-	async execute({
-		userId,
-	}: IGetUserMetricsUseCaseRequest): Promise<IGetUserMetricsUseCaseResponse> {
+	async execute({ userId }: IGetUserMetricsUseCaseRequest): Promise<IGetUserMetricsUseCaseResponse> {
 		const checkInsCount = await this.checkInsRepository.countByUserId(userId);
 
 		return {

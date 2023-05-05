@@ -1,8 +1,9 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ValidateCheckInUseCase } from '@/useCases/validate-check-in-use-case';
-import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-check-ins-repository';
 import { ResourceNotFoundError } from '@/useCases/errors/resource-not-found-error';
+import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-check-ins-repository';
+import { LateChackInValidationError } from '@/useCases/errors/late-check-in-validation-error';
 
 let validateCheckInUseCase: ValidateCheckInUseCase;
 let checkInsRepository: InMemoryCheckInsRepository;
@@ -12,11 +13,11 @@ describe('Validate Check In Use Case', () => {
 		checkInsRepository = new InMemoryCheckInsRepository();
 		validateCheckInUseCase = new ValidateCheckInUseCase(checkInsRepository);
 
-		// vi.useFakeTimers();
+		vi.useFakeTimers();
 	});
 
 	afterEach(() => {
-		// vi.useRealTimers();
+		vi.useRealTimers();
 	});
 
 	it('Should be able to validate the check-in', async () => {
@@ -32,8 +33,21 @@ describe('Validate Check In Use Case', () => {
 	});
 
 	it('Should not be able to validate an inexistent check-in', async () => {
-		await expect(() =>
-			validateCheckInUseCase.execute({ checkInId: 'inexistent id' })
-		).rejects.toBeInstanceOf(ResourceNotFoundError);
+		await expect(() => validateCheckInUseCase.execute({ checkInId: 'inexistent id' })).rejects.toBeInstanceOf(ResourceNotFoundError);
+	});
+
+	it('Should not be able to validate the check-in after 20 minutes of its creation', async () => {
+		vi.setSystemTime(new Date(2023, 4, 4, 14, 20));
+
+		const createdCheckIn = await checkInsRepository.create({
+			gym_id: 'gym-01',
+			user_id: 'user-01',
+		});
+
+		const twentyOneMinutesInMS = 1000 * 60 * 21;
+
+		vi.advanceTimersByTime(twentyOneMinutesInMS);
+
+		await expect(() => validateCheckInUseCase.execute({ checkInId: createdCheckIn.id })).rejects.toBeInstanceOf(LateChackInValidationError);
 	});
 });
