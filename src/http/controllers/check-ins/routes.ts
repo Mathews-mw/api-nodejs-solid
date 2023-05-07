@@ -5,6 +5,7 @@ import { history } from './history';
 import { metrics } from './metrics';
 import { valdiate } from './validate';
 import { authMiddleware } from '@/http/middlewares/auth-middleware';
+import { verifyUserRoleMiddleware } from '@/http/middlewares/verify-user-role-middleware';
 
 export async function checkInsRoutes(app: FastifyInstance) {
 	app.addHook('onRequest', authMiddleware);
@@ -13,5 +14,5 @@ export async function checkInsRoutes(app: FastifyInstance) {
 	app.get('/check-ins/metrics', metrics);
 
 	app.post('/gyms/:gymId/check-ins', create);
-	app.patch('/check-ins/:checkInId/validate', valdiate);
+	app.patch('/check-ins/:checkInId/validate', { onRequest: [verifyUserRoleMiddleware('ADMIN')] }, valdiate);
 }
