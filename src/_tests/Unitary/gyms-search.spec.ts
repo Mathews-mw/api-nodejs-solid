@@ -43,10 +43,7 @@ describe('Search Gyms Use Case', () => {
 		});
 
 		expect(gyms).toHaveLength(2);
-		expect(gyms).toEqual([
-			expect.objectContaining({ title: 'Live Towers' }),
-			expect.objectContaining({ title: 'Live Cities' }),
-		]);
+		expect(gyms).toEqual([expect.objectContaining({ title: 'Live Towers' }), expect.objectContaining({ title: 'Live Cities' })]);
 	});
 
 	it('Should be able to fetch paginate gyms search', async () => {
@@ -66,9 +63,6 @@ describe('Search Gyms Use Case', () => {
 		});
 
 		expect(gyms).toHaveLength(2);
-		expect(gyms).toEqual([
-			expect.objectContaining({ title: 'Blue Fit 21' }),
-			expect.objectContaining({ title: 'Blue Fit 22' }),
-		]);
+		expect(gyms).toEqual([expect.objectContaining({ title: 'Blue Fit 21' }), expect.objectContaining({ title: 'Blue Fit 22' })]);
 	});
 });
