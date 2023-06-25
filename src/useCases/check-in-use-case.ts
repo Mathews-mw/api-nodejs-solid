@@ -18,27 +18,16 @@ interface ICheckInUseCaseResponse {
 }
 
 export class CheckInUseCase {
-	constructor(
-		private checkInsRepository: ICheckInsRepository,
-		private gymRepository: IGymRepository
-	) {}
+	constructor(private checkInsRepository: ICheckInsRepository, private gymRepository: IGymRepository) {}
 
-	async execute({
-		userId,
-		gymId,
-		userLatitude,
-		userLongitude,
-	}: ICheckInUseCaseRequest): Promise<ICheckInUseCaseResponse> {
+	async execute({ userId, gymId, userLatitude, userLongitude }: ICheckInUseCaseRequest): Promise<ICheckInUseCaseResponse> {
 		const gym = await this.gymRepository.findById(gymId);
 
 		if (!gym) {
 			throw new ResourceNotFoundError();
 		}
 
-		const distance = getDistanceBetweenCoordinates(
-			{ latitude: userLatitude, longitude: userLongitude },
-			{ latitude: gym.latitude.toNumber(), longitude: gym.longitude.toNumber() }
-		);
+		const distance = getDistanceBetweenCoordinates({ latitude: userLatitude, longitude: userLongitude }, { latitude: gym.latitude.toNumber(), longitude: gym.longitude.toNumber() });
 
 		const MAX_ALLOWED_DISTANCE_IN_KM = 0.1;
 
@@ -46,10 +35,7 @@ export class CheckInUseCase {
 			throw new MaxDistanceError();
 		}
 
-		const checkInOnSameDay = await this.checkInsRepository.findByUserIdOnDate(
-			userId,
-			new Date()
-		);
+		const checkInOnSameDay = await this.checkInsRepository.findByUserIdOnDate(userId, new Date());
 
 		if (checkInOnSameDay) {
 			throw new MaxNumberCheckInsError();

@@ -34,18 +34,13 @@ export class InMemoryGymRepository implements IGymRepository {
 
 	async findManyNearby(params: IFindManyNearbyParams) {
 		return this.gyms.filter((gym) => {
-			const distance = getDistanceBetweenCoordinates(
-				{ latitude: params.latitude, longitude: params.longitude },
-				{ latitude: gym.latitude.toNumber(), longitude: gym.longitude.toNumber() }
-			);
+			const distance = getDistanceBetweenCoordinates({ latitude: params.latitude, longitude: params.longitude }, { latitude: gym.latitude.toNumber(), longitude: gym.longitude.toNumber() });
 
 			return distance < 10;
 		});
 	}
 
 	async searchMany(query: string, page: number) {
-		return this.gyms
-			.filter((gym) => gym.title.toLowerCase().includes(query.toLowerCase()))
-			.slice((page - 1) * 20, page * 20);
+		return this.gyms.filter((gym) => gym.title.toLowerCase().includes(query.toLowerCase())).slice((page - 1) * 20, page * 20);
 	}
 }

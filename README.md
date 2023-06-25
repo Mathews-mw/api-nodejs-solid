@@ -1,4 +1,4 @@
-# API NODEJS SOLId
+# API NODEJS SOLID
 This application is a basic API with solid fundamentals.
 
 ## About this application 

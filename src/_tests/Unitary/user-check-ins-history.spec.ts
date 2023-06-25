@@ -29,10 +29,7 @@ describe('User Check-ins History Use Case', () => {
 		});
 
 		expect(checkIns).toHaveLength(2);
-		expect(checkIns).toEqual([
-			expect.objectContaining({ gym_id: 'gym-01' }),
-			expect.objectContaining({ gym_id: 'gym-02' }),
-		]);
+		expect(checkIns).toEqual([expect.objectContaining({ gym_id: 'gym-01' }), expect.objectContaining({ gym_id: 'gym-02' })]);
 	});
 
 	it('Should be able to fetch paginate check-in history', async () => {
@@ -49,9 +46,6 @@ describe('User Check-ins History Use Case', () => {
 		});
 
 		expect(checkIns).toHaveLength(2);
-		expect(checkIns).toEqual([
-			expect.objectContaining({ gym_id: 'gym-21' }),
-			expect.objectContaining({ gym_id: 'gym-22' }),
-		]);
+		expect(checkIns).toEqual([expect.objectContaining({ gym_id: 'gym-21' }), expect.objectContaining({ gym_id: 'gym-22' })]);
 	});
 });
